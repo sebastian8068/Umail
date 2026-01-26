@@ -1,1 +1,6 @@
-mysql-connector-python==9.5.0
+CTkMessagebox==2.7
+CTkTable==1.1
+customtkinter==5.2.2
+darkdetect==0.8.0
+packaging==26.0
+pillow==12.1.0
