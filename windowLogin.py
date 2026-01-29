@@ -84,7 +84,7 @@ class WindowLogin(customtkinter.CTk):
             justify="left",
             font=("Arial", 16))
         
-        self.label_email.grid(row=1, column=0, padx=(30, 0), sticky="w")
+        self.label_email.grid(row=0, column=0, padx=(30, 0), sticky="we")
 
         self.entry_email = customtkinter.CTkEntry(
             master=self.tab_iniciar,
@@ -94,7 +94,7 @@ class WindowLogin(customtkinter.CTk):
             placeholder_text="usuario@dominio.com",
             corner_radius=20)
 
-        self.entry_email.grid(row=2, column=0, padx=(25, 25), sticky="we")
+        self.entry_email.grid(row=1, column=0, padx=(25, 25), sticky="we")
 
 
         self.label_passw = customtkinter.CTkLabel(
@@ -105,7 +105,7 @@ class WindowLogin(customtkinter.CTk):
             justify="left",
             font=("Arial", 16))
         
-        self.label_passw.grid(row=3, column=0, padx=(30, 0), pady=(40, 0), sticky="w")
+        self.label_passw.grid(row=2, column=0, padx=(30, 0), pady=(40, 0), sticky="w")
 
         self.entry_passw = customtkinter.CTkEntry(
             master=self.tab_iniciar,
@@ -115,7 +115,7 @@ class WindowLogin(customtkinter.CTk):
             placeholder_text="***********",
             corner_radius=20)
 
-        self.entry_passw.grid(row=4, column=0, padx=(25, 25), pady=(0, 80), sticky="we")
+        self.entry_passw.grid(row=3, column=0, padx=(25, 25), pady=(0, 80), sticky="we")
 
 
         self.button_acced = customtkinter.CTkButton(master=self.tab_iniciar, 
@@ -139,7 +139,7 @@ class WindowLogin(customtkinter.CTk):
             anchor="w",
             justify="left",
             font=("Arial", 16))
-        self.label_reg_email.grid(row=1, column=0, padx=(30, 0), sticky="w")
+        self.label_reg_email.grid(row=0, column=0, padx=(5, 0), sticky="w")
 
         self.entry_reg_email = customtkinter.CTkEntry(
             master=self.tab_registrarse,
@@ -147,7 +147,9 @@ class WindowLogin(customtkinter.CTk):
             text_color="#FFFFFF",
             placeholder_text="usuario@dominio.com",
             corner_radius=20)
-        self.entry_reg_email.grid(row=2, column=0, padx=(25, 25), pady=(0, 3), sticky="we")
+        self.entry_reg_email.grid(row=1, column=0, 
+                                  #padx=(25, 25), 
+                                  pady=(0, 3), sticky="we")
 
         self.label_reg_passw = customtkinter.CTkLabel(
             master=self.tab_registrarse,
@@ -156,7 +158,9 @@ class WindowLogin(customtkinter.CTk):
             anchor="w",
             justify="left",
             font=("Arial", 16))
-        self.label_reg_passw.grid(row=3, column=0, padx=(30, 0), sticky="w")
+        self.label_reg_passw.grid(row=2, column=0, 
+                                  padx=(5, 0), 
+                                  sticky="w")
 
         self.entry_reg_passw = customtkinter.CTkEntry(
             master=self.tab_registrarse,
@@ -165,7 +169,9 @@ class WindowLogin(customtkinter.CTk):
             placeholder_text="***********",
             corner_radius=20,
             show='*')
-        self.entry_reg_passw.grid(row=4, column=0, padx=(25, 25), pady=(0, 3), sticky="we")
+        self.entry_reg_passw.grid(row=3, column=0, 
+                                  #padx=(25, 25), 
+                                  pady=(0, 3), sticky="we")
 
         self.label_confirm_passw = customtkinter.CTkLabel(
             master=self.tab_registrarse,
@@ -174,7 +180,9 @@ class WindowLogin(customtkinter.CTk):
             anchor="w",
             justify="left",
             font=("Arial", 16))
-        self.label_confirm_passw.grid(row=5, column=0, padx=(30, 0), sticky="w")
+        
+        self.label_confirm_passw.grid(row=4, column=0, padx=(5, 0), 
+                                      sticky="w")
 
         self.entry_confirm_passw = customtkinter.CTkEntry(
             master=self.tab_registrarse,
@@ -183,7 +191,8 @@ class WindowLogin(customtkinter.CTk):
             placeholder_text="***********",
             corner_radius=20,
             show='*')
-        self.entry_confirm_passw.grid(row=6, column=0, padx=(25, 25), pady=(0, 3), sticky="we")
+        self.entry_confirm_passw.grid(row=5, column=0, #padx=(25, 25), 
+                                      pady=(0, 3), sticky="we")
 
         self.label_name = customtkinter.CTkLabel(
             master=self.tab_registrarse,
@@ -192,7 +201,8 @@ class WindowLogin(customtkinter.CTk):
             anchor="w",
             justify="left",
             font=("Arial", 16))
-        self.label_name.grid(row=7, column=0, padx=(30, 0), sticky="w")
+        self.label_name.grid(row=6, column=0, padx=(5, 0), 
+                             sticky="w")
 
         self.entry_name = customtkinter.CTkEntry(
             master=self.tab_registrarse,
@@ -200,7 +210,8 @@ class WindowLogin(customtkinter.CTk):
             text_color="#FFFFFF",
             placeholder_text="Nombre completo",
             corner_radius=20)
-        self.entry_name.grid(row=8, column=0, padx=(25, 25), pady=(0, 3), sticky="we")
+        self.entry_name.grid(row=7, column=0, #padx=(25, 25), 
+                             pady=(0, 3), sticky="we")
 
         self.label_phone = customtkinter.CTkLabel(
             master=self.tab_registrarse,
@@ -209,7 +220,8 @@ class WindowLogin(customtkinter.CTk):
             anchor="w",
             justify="left",
             font=("Arial", 16))
-        self.label_phone.grid(row=9, column=0, padx=(30, 0), sticky="we")
+        self.label_phone.grid(row=8, column=0, padx=(5, 0), 
+                              sticky="we")
 
         self.entry_phone = customtkinter.CTkEntry(
             master=self.tab_registrarse,
@@ -217,7 +229,8 @@ class WindowLogin(customtkinter.CTk):
             text_color="#FFFFFF",
             placeholder_text="+51 xxxx xxx xxxx",
             corner_radius=20)
-        self.entry_phone.grid(row=10, column=0, padx=(25, 25), pady=(0, 10), sticky="we")
+        self.entry_phone.grid(row=9, column=0, #padx=(25, 25), 
+                              pady=(0, 10), sticky="we")
 
         self.button_create = customtkinter.CTkButton(master=self.tab_registrarse, 
                                                      text='Crear cuenta',
@@ -226,7 +239,7 @@ class WindowLogin(customtkinter.CTk):
                                                      fg_color= '#9ecde1', 
                                                      text_color='black',
                                                      height= 30)
-        self.button_create.grid(row=12, 
+        self.button_create.grid(row=10, 
                                 column=0, 
                                 padx= 100, 
                                 sticky= 'we')
