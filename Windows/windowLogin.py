@@ -1,17 +1,27 @@
+import os
 import customtkinter
 from typing import Optional, Union, Tuple
 from PIL import Image
 
 
-class WindowLogin(customtkinter.CTk):
-    def __init__(self, fg_color: Optional[Union[str, Tuple[str, str]]] = None, **kwargs):
-        super().__init__(fg_color, **kwargs)
+class WindowLogin(customtkinter.CTkToplevel):
+    def __init__(self, 
+                 master = None,
+                 on_login_callback = None,
+                 fg_color: Optional[Union[str, Tuple[str, str]]] = None, 
+                 **kwargs):
+        super().__init__(master,
+                         fg_color = fg_color, 
+                         **kwargs)
         self.title('Inicio')
         self.geometry('800x600')
         self.resizable(False, False)
         customtkinter.set_appearance_mode('light')
         #customtkinter.set_appearance_mode('dark')
-        self.side_img_data = Image.open('side_img.png') #tiene que se del mismo tamanio las dos img
+        #tiene que se del mismo tamanio las dos img
+        self.on_login_callback = on_login_callback
+        side_img_path: str = os.path.join(os.path.dirname(__file__), "side_img.png")
+        self.side_img_data = Image.open(side_img_path)
         
         self.side_img = customtkinter.CTkImage(dark_image= self.side_img_data,
                                                light_image= self.side_img_data,
@@ -113,7 +123,8 @@ class WindowLogin(customtkinter.CTk):
             fg_color="#5c7c8a",
             text_color="#FFFFFF",
             placeholder_text="***********",
-            corner_radius=20)
+            corner_radius=20,
+            show= '*')
 
         self.entry_passw.grid(row=3, column=0, padx=(25, 25), pady=(0, 80), sticky="we")
 
@@ -124,7 +135,8 @@ class WindowLogin(customtkinter.CTk):
                                                      corner_radius=32,
                                                      fg_color= '#9ecde1', 
                                                      text_color='black', 
-                                                     height= 40)
+                                                     height= 40,
+                                                     command= self._handle_login)
         self.button_acced.grid(row=6, 
                                 column=0, 
                                 padx= 100, 
@@ -238,19 +250,76 @@ class WindowLogin(customtkinter.CTk):
                                                      corner_radius=32,
                                                      fg_color= '#9ecde1', 
                                                      text_color='black',
-                                                     height= 30)
+                                                     height= 30,
+                                                     command= self.getSingInData)
         self.button_create.grid(row=10, 
                                 column=0, 
                                 padx= 100, 
                                 sticky= 'we')
 
 
-
-
     def closeLoginWindow(self):
         self.destroy()
 
+    def getLoginData(self):
+    # Retorna: (email, password)
+        print('getLoginData fue llamado')
+        return (self.entry_email.get(), self.entry_passw.get())
 
-if __name__ == '__main__':
-    window_login = WindowLogin()
-    window_login.mainloop()
+    def getSingInData(self) -> Tuple[str, str, str, str, str]:
+    # Retorna: (email, password, confirm_password, name, phone)
+        print('getSingInData fue llamado')
+
+        return (
+            self.entry_reg_email.get(), # email
+            self.entry_reg_passw.get(), # contraseña
+            self.entry_confirm_passw.get(), # confirmación
+            self.entry_name.get(), # Nombre
+            self.entry_phone.get() # tlf
+        )
+
+    def validateSingInData(self) -> Tuple[bool, str | None]:
+        print('validateSingInData fue llamado')
+        email, password, confirm_password, name, phone = self.getSingInData()
+
+        # Validar campos vacíos
+        if not email.strip():
+            return False, "El email no puede estar vacío"
+        if not password.strip():
+            return False, "La contraseña no puede estar vacía"
+        if not confirm_password.strip():
+            return False, "Debe confirmar la contraseña"
+        if not name.strip():
+            return False, "El nombre no puede estar vacío"
+        if not phone.strip():
+            return False, "El teléfono no puede estar vacío"
+
+        # Validar que email termine con @ucla.com
+        if not email.endswith('@ucla.com'):
+            return False, 'El email debe terminar con "@ucla.com"'
+
+        # Validar que no haya múltiples @
+        if email.count('@') != 1:
+            return False, 'El email solo puede contener un "@"'
+
+        # Validar que la parte antes del @ no esté vacía
+        local_part = email.split('@')[0]
+        if not local_part.strip():
+            return False, "Email no válido"
+
+        if password != confirm_password:
+            return False, "Las contraseñas no coinciden"
+
+        if len(password) < 6:
+            return False, "La contraseña debe tener al menos 6 caracteres"
+
+        # Falta validar la entrada del Teléfono
+        return True, None
+
+    def _handle_login(self):
+        email, password = self.getLoginData()
+
+        if self.on_login_callback:
+            self.on_login_callback(email, password)
+        else:
+            self.destroy()

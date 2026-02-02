@@ -48,7 +48,8 @@ class WindowRedacter(customtkinter.CTkToplevel):
         self.segment_files.grid(row= 0, column= 0)
 
         self.button_send = customtkinter.CTkButton(self, 
-                                                   text='Enviar')
+                                                   text='Enviar',
+                                                   command= self.destroy)
         self.button_send.grid(row= 4, 
                               column= 0)
 

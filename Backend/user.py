@@ -1,10 +1,12 @@
 from mysql.connector.cursor import MySQLCursorDict
-from mysql.connector.types import ResultType
-from dataBase import connect, disconnect
 from mysql.connector.abstracts import MySQLConnectionAbstract
 from mysql.connector.pooling import PooledMySQLConnection
 from mysql.connector.errors import Error
 from typing import Any, Dict, Tuple
+try:
+    from Backend.dataBase import connect, disconnect
+except ModuleNotFoundError:
+    from dataBase import connect, disconnect
 
 class User:
     def __init__(self, name: str, number: str, email: str, password: str) -> None:
@@ -113,10 +115,12 @@ class UserManagment:
             disconnect(connected)
     
 # Tests
+"""
 if __name__ == '__main__':
     p_usuario = User('Juan', '0123', 'juan@ucla.com', 'sadggrg')
-    # UserManagment.add_user(p_usuario)
+    antonio = User('mauricio', '696969', 'cha@ucla.com', 'hitler')
+    UserManagment.add_user(antonio)
     print(UserManagment.validateEmail(p_usuario.email))
     print(UserManagment.validateEmail('aaa'))
     print(UserManagment.validateCredentials(p_usuario.email, p_usuario.password))
-    print(UserManagment.getID(p_usuario.email))
+    print(UserManagment.getID(p_usuario.email)) """

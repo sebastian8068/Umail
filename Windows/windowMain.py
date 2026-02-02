@@ -1,8 +1,10 @@
 import customtkinter
-from CTkTable import *
-from CTkMessagebox import *
-import windowRedact
+from CTkTable import CTkTable
+from CTkMessagebox import CTkMessagebox
 from PIL import Image
+import os
+from typing import Optional, Union, Tuple
+from Windows.windowRedact import WindowRedacter
 
 values_segmented_search: list[str] = ['Email', 'Asunto', 'Fecha']
 
@@ -11,21 +13,24 @@ inbox: list[list[str]]= [['h', 'o', 'l', 'a'],
                          ['h', 'o', 'l', 'a'],
                          ['h', 'o', 'l', 'a']]
 
-class Main_windows(customtkinter.CTk):
-    def __init__(self):
-        super().__init__()
+class WindowMain(customtkinter.CTkToplevel):
+    def __init__(self, *args, fg_color: Optional[Union[str, Tuple[str, str]]] = None, **kwargs):
+        super().__init__(*args, fg_color=fg_color, **kwargs)
         self.title('Correo')
         self.attributes('-fullscreen', True)
         self.grid_columnconfigure(1, weight= 1)
         self.grid_rowconfigure(3, weight=1)
         customtkinter.set_appearance_mode('light')
         self.toplevel_window = None
-        ucla_img_data_white = Image.open('ucla_logo_light.png')
-        ucla_img_data_dark = Image.open('ucla_logo_light.png')
+
+        ucla_img_path_light: str = os.path.join(os.path.dirname(__file__), "ucla_logo_light.png")
+        ucla_img_path_dark: str = os.path.join(os.path.dirname(__file__), "ucla_logo_light.png")
+        ucla_img_data_light = Image.open(ucla_img_path_light)
+        ucla_img_data_dark = Image.open(ucla_img_path_dark)
 
 
         self.img_ucla = customtkinter.CTkImage(dark_image= ucla_img_data_dark,
-                                               light_image= ucla_img_data_white,
+                                               light_image= ucla_img_data_light,
                                                size= (70, 70))
         self.img_label_ucla = customtkinter.CTkLabel(self, 
                                                      text='', 
@@ -178,7 +183,7 @@ class Main_windows(customtkinter.CTk):
     def open_window_redacter(self):
         print('opening window_redacter...')
         if self.toplevel_window is None or not self.toplevel_window.winfo_exists():
-            self.toplevel_window = windowRedact.WindowRedacter(self)
+            self.toplevel_window = WindowRedacter(self)
         else:
             self.toplevel_window.focus()
 
@@ -205,7 +210,3 @@ class Main_windows(customtkinter.CTk):
 
     def message_error(self) -> None:
         CTkMessagebox(title= 'Error', message= 'Mensaje de error', icon= 'cancel')
-
-if __name__ == '__main__':
-    main_windows = Main_windows()
-    main_windows.mainloop()
