@@ -3,10 +3,7 @@ from mysql.connector.abstracts import MySQLConnectionAbstract
 from mysql.connector.pooling import PooledMySQLConnection
 from mysql.connector.errors import Error
 from typing import Any, Dict, Tuple
-try:
-    from Backend.dataBase import connect, disconnect
-except ModuleNotFoundError:
-    from dataBase import connect, disconnect
+from Backend.dataBase import connect, disconnect
 
 class User:
     def __init__(self, name: str, number: str, email: str, password: str) -> None:

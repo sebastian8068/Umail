@@ -7,7 +7,8 @@ from PIL import Image
 class WindowLogin(customtkinter.CTkToplevel):
     def __init__(self, 
                  master = None,
-                 on_login_callback = None,
+                 login_callback = None,
+                 sing_in_callback = None,
                  fg_color: Optional[Union[str, Tuple[str, str]]] = None, 
                  **kwargs):
         super().__init__(master,
@@ -19,7 +20,8 @@ class WindowLogin(customtkinter.CTkToplevel):
         customtkinter.set_appearance_mode('light')
         #customtkinter.set_appearance_mode('dark')
         #tiene que se del mismo tamanio las dos img
-        self.on_login_callback = on_login_callback
+        self.login_callback = login_callback
+        self.sing_in_callback = sing_in_callback
         side_img_path: str = os.path.join(os.path.dirname(__file__), "side_img.png")
         self.side_img_data = Image.open(side_img_path)
         
@@ -136,7 +138,7 @@ class WindowLogin(customtkinter.CTkToplevel):
                                                      fg_color= '#9ecde1', 
                                                      text_color='black', 
                                                      height= 40,
-                                                     command= self._handle_login)
+                                                     command= self._handleLogin)
         self.button_acced.grid(row=6, 
                                 column=0, 
                                 padx= 100, 
@@ -251,15 +253,13 @@ class WindowLogin(customtkinter.CTkToplevel):
                                                      fg_color= '#9ecde1', 
                                                      text_color='black',
                                                      height= 30,
-                                                     command= self.getSingInData)
+                                                     command= self._handleSingIn)
         self.button_create.grid(row=10, 
                                 column=0, 
                                 padx= 100, 
                                 sticky= 'we')
 
 
-    def closeLoginWindow(self):
-        self.destroy()
 
     def getLoginData(self):
     # Retorna: (email, password)
@@ -277,10 +277,10 @@ class WindowLogin(customtkinter.CTkToplevel):
             self.entry_name.get(), # Nombre
             self.entry_phone.get() # tlf
         )
-
-    def validateSingInData(self) -> Tuple[bool, str | None]:
+    @staticmethod
+    def validateSingInData(email, password, confirm_password, name, phone) -> Tuple[bool, str | None]:
         print('validateSingInData fue llamado')
-        email, password, confirm_password, name, phone = self.getSingInData()
+        # email, password, confirm_password, name, phone = self.getSingInData()
 
         # Validar campos vacíos
         if not email.strip():
@@ -313,13 +313,18 @@ class WindowLogin(customtkinter.CTkToplevel):
         if len(password) < 6:
             return False, "La contraseña debe tener al menos 6 caracteres"
 
-        # Falta validar la entrada del Teléfono
         return True, None
 
-    def _handle_login(self):
+    def _handleLogin(self):
         email, password = self.getLoginData()
 
-        if self.on_login_callback:
-            self.on_login_callback(email, password)
-        else:
-            self.destroy()
+        if self.login_callback:
+            self.login_callback(email, password)
+        # else:
+        #     self.destroy()
+
+    def _handleSingIn(self):
+        email, password, confirm_password, name, phone = self.getSingInData()
+
+        if self.sing_in_callback:
+            self.sing_in_callback(name, phone, email, password, confirm_password)

@@ -13,9 +13,14 @@ class RootWindow(customtkinter.CTk):
          self.withdraw()
          self.openLoginWindow()
 
+    def errorMessage(self, message: str) -> None:
+        CTkMessagebox(title= 'Error', message= message, icon= 'cancel')
+
     def openLoginWindow(self):
         print('opening login window...')
-        self.top_level_login = WindowLogin(master= self, on_login_callback= self.onLoginSuccess)
+        self.top_level_login = WindowLogin(master= self, 
+                                           login_callback= self.onLoginSuccess,
+                                           sing_in_callback= self.onSingInSuccess)
 
     def openMainWindow(self):
         print('opening main window')
@@ -30,14 +35,26 @@ class RootWindow(customtkinter.CTk):
 
         if UserManagment.validateCredentials(email, password):
             print('login exitoso')
-            # if hasattr(self, 'top_level_login'):
             self.top_level_login.destroy()
 
             self.openMainWindow()
         else:
-          CTkMessagebox(title='Error',
-                       message= 'Credenciales incorrectas',
-                       icon= 'cancel')
+            self.errorMessage('Credenciales incorrectas')
+
+    def onSingInSuccess(self, name: str, number: str, email: str, password: str, confirm_password: str):
+        valid, error = WindowLogin.validateSingInData(email, password, confirm_password, name, number)
+
+        if not valid:
+            if isinstance(error, str):
+                self.errorMessage(error)
+
+        elif UserManagment.validateEmail(email):
+            self.errorMessage('El email ya está en uso')
+
+        else:
+            user = User(name, number, email, password)
+            UserManagment.add_user(user)
+            CTkMessagebox(title= 'Éxito', message= 'Cuenta creada exitosamente', icon= 'check')
 
 
 def main() -> None:
