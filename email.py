@@ -127,7 +127,7 @@ class EmailManagement:
         finally:
             disconnect(connected)
 
-    #Este método se encarga exclusivamente de hablar con la base de datos. 
+ '''#Este método se encarga exclusivamente de hablar con la base de datos. 
     # Es puro, rápido y no sabe nada de ventanas o botones.
     @staticmethod
     def get_attachments(message_id: int) -> List[Dict[str, Any]]:
@@ -228,7 +228,7 @@ class EmailManagement:
        finally:
            disconnect(connected)
 
-'''# Pruebas
+# Pruebas
 if __name__ == '__main__':
     # Ejemplo de prueba rápida (requiere DB/SMTP configurados)
     try:
@@ -252,4 +252,5 @@ if __name__ == '__main__':
         print('Envío exitoso:', sent)
 
     except Exception as e:
+
         print('Error en prueba:', e)'''
