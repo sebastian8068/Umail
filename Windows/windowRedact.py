@@ -1,21 +1,38 @@
+from CTkMessagebox import CTkMessagebox
 import customtkinter
 from typing import Optional, Tuple, Union
+import sys, os
+# Agregar el directorio Backend/ directamente al path
+backend_dir = os.path.join(os.path.dirname(__file__), '..', 'Backend')
+sys.path.insert(0, backend_dir)  # Insertar al inicio para prioridad
+
+# Ahora los imports funcionarán
+from email import Email, EmailManagement  # ← Sin 'Backend.'
+from user import UserManagment  # ← Sin 'Backend.'rom Backend.user import UserManagment
 
 class WindowRedacter(customtkinter.CTkToplevel):
-    def __init__(self, *args, fg_color: Optional[Union[str, Tuple[str, str]]] = None, **kwargs):
-        super().__init__(*args, fg_color=fg_color, **kwargs)
+    def __init__(self, 
+                 *args, 
+                 sender_email: str,
+                 fg_color: Optional[Union[str, Tuple[str, str]]] = None, 
+                 **kwargs):
+        super().__init__(*args, 
+                         fg_color=fg_color, 
+                         **kwargs)
         self.geometry('850x500')
         self.configure(fg_color= ('#dbe9ee', '#4f6d7a'))
         self.title('Nuevo mensaje')
         self.grid_columnconfigure(1, weight=1)
         self.grid_rowconfigure(2, weight=1)
-        self.index_segmen_file: int = 0
+        self.sender_email = sender_email
 
         self.entry_recipient = customtkinter.CTkEntry(self, 
                                                       placeholder_text= 'Destinatarios', 
                                                       fg_color= 'transparent')
         self.entry_recipient.grid(row= 0, 
-                                  column= 0)
+                                  column= 0,
+                                  columnspan= 3,
+                                  sticky = 'ew')
 
         self.entry_issue = customtkinter.CTkEntry(self, 
                                                   placeholder_text= 'Asunto', 
@@ -34,30 +51,30 @@ class WindowRedacter(customtkinter.CTkToplevel):
                               columnspan= 3,
                               sticky= 'ewns')
 
-        self.scroll_files = customtkinter.CTkScrollableFrame(self,
-                                                             orientation= 'horizontal',
-                                                             height=30)
-        self.scroll_files.grid(row= 3,
-                               column= 0,
-                               columnspan= 3,
-                               sticky= 'ew')
+        # self.scroll_files = customtkinter.CTkScrollableFrame(self,
+        #                                                      orientation= 'horizontal',
+        #                                                      height=30)
+        # self.scroll_files.grid(row= 3,
+        #                        column= 0,
+        #                        columnspan= 3,
+        #                        sticky= 'ew')
 
-        self.segment_files = customtkinter.CTkSegmentedButton(self.scroll_files,
-                                                             values= [])
+        # self.segment_files = customtkinter.CTkSegmentedButton(self.scroll_files,
+                                                             # values= [])
                                                              
-        self.segment_files.grid(row= 0, column= 0)
+        # self.segment_files.grid(row= 0, column= 0)
 
         self.button_send = customtkinter.CTkButton(self, 
                                                    text='Enviar',
-                                                   command= self.destroy)
+                                                   command= self.sendEmal)
         self.button_send.grid(row= 4, 
                               column= 0)
 
-        self.button_addfile = customtkinter.CTkButton(self, 
-                                                      text= 'Adjuntar',
-                                                      command= self.add_file)
-        self.button_addfile.grid(row= 4, 
-                                 column= 1)
+        # self.button_addfile = customtkinter.CTkButton(self, 
+        #                                               text= 'Adjuntar',
+        #                                               command= self.add_file)
+        # self.button_addfile.grid(row= 4, 
+        #                          column= 1)
 
         self.button_clear = customtkinter.CTkButton(self, 
                                                     text= 'Limpiar',
@@ -65,12 +82,52 @@ class WindowRedacter(customtkinter.CTkToplevel):
         self.button_clear.grid(row= 4,
                                column= 2)
 
-    def add_file(self):
-        file_name = customtkinter.filedialog.askopenfilename()
-
-        self.segment_files.insert(self.index_segmen_file, file_name)
-
-        self.index_segmen_file += 1
+    # def add_file(self):
+    #     file_name = customtkinter.filedialog.askopenfilename()
+    #
+    #     self.segment_files.insert(self.index_segmen_file, file_name)
+    #
+    #     self.index_segmen_file += 1
 
     def clear_body(self):
         self.texbox_body.delete(0.0, 'end')
+
+    # def sendEmal(self):
+    #     email_reciver = self.entry_recipient.get()
+    #     issue = self.entry_issue.get()
+    #     body = self.texbox_body.get(0.0, 'end')
+    #     # email = Email(sender= '', email_reciver, issue, body)
+    #     print(email_reciver, issue, body)
+
+    def sendEmal(self):
+    # 1. Recoge los datos de la interfaz 
+     email_receiver = self.entry_recipient.get()
+     issue = self.entry_issue.get()
+     body = self.texbox_body.get(0.0, 'end')
+    
+    # 2. Crea el objeto Email (usa self.sender_email)
+     email_obj = Email(
+        sender=self.sender_email,  # ← Aquí va tu email
+        receiver=email_receiver,
+        subject=issue,
+        body=body,
+        files=None
+     )
+    
+    # 3. Obtén el ID del remitente (necesitas este método)
+     id_sender = UserManagment.getID(self.sender_email)
+    
+    # 4. Envía el email
+     success = EmailManagement.sendEmail(
+        email_obj=email_obj,
+        id_sender=id_sender,
+        receiver_email=email_receiver
+     )
+    
+     if success and UserManagment.validateEmail(email_receiver):
+         print("Correo enviado exitosamente")
+         CTkMessagebox(title= 'Éxito', message= 'Mensaje enviado exitosamente', icon= 'check')
+         self.destroy()  # Cierra la ventana
+     else:
+         print("Error al enviar el correo")
+         CTkMessagebox(title= 'Error', message= 'Error al enviar el mensaje', icon= 'cancel')

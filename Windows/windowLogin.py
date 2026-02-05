@@ -320,8 +320,7 @@ class WindowLogin(customtkinter.CTkToplevel):
 
         if self.login_callback:
             self.login_callback(email, password)
-        # else:
-        #     self.destroy()
+            return email
 
     def _handleSingIn(self):
         email, password, confirm_password, name, phone = self.getSingInData()

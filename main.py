@@ -2,6 +2,8 @@ from CTkMessagebox import CTkMessagebox
 from Windows.windowMain import WindowMain
 from Windows.windowLogin import WindowLogin
 from Backend.user import User, UserManagment
+from Backend.startMainWindow import StartMainWindow
+# from Backend.email import Email, EmailManagment
 import customtkinter
 from typing import Optional, Union, Tuple
 
@@ -22,22 +24,20 @@ class RootWindow(customtkinter.CTk):
                                            login_callback= self.onLoginSuccess,
                                            sing_in_callback= self.onSingInSuccess)
 
-    def openMainWindow(self):
+    def openMainWindow(self, email: str):
         print('opening main window')
-        self.top_level_main = WindowMain(self)
+        self.top_level_main = WindowMain(self, inbox= StartMainWindow.getInBox(email), current_user_email = email)
 
     def onLoginSuccess(self, email: str, password: str):
         if UserManagment.validateEmail(email) == False:
-            CTkMessagebox(title= 'Error',
-                          message= 'Usuario no encontrado',
-                          icon= 'cancel')
+            self.errorMessage('Usuario no encontrado')
             return
 
         if UserManagment.validateCredentials(email, password):
             print('login exitoso')
             self.top_level_login.destroy()
 
-            self.openMainWindow()
+            self.openMainWindow(email)
         else:
             self.errorMessage('Credenciales incorrectas')
 
